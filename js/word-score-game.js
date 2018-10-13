@@ -1,6 +1,6 @@
 var BAG_OF_LETTERS = [
-/*		new Letter('_', 2, 0),
-		new Letter('_', 2, 0),*/
+		new Letter('_', 2, 0),
+		new Letter('_', 2, 0),
 		new Letter('A', 9, 1),
 		new Letter('A', 9, 1),
 		new Letter('A', 9, 1),
@@ -18,7 +18,7 @@ var BAG_OF_LETTERS = [
 		new Letter('D', 4, 2),
 		new Letter('D', 4, 2),
 		new Letter('D', 4, 2),
-/*		new Letter('E', 12, 1),
+		new Letter('E', 12, 1),
 		new Letter('E', 12, 1),
 		new Letter('E', 12, 1),
 		new Letter('E', 12, 1),
@@ -98,7 +98,7 @@ var BAG_OF_LETTERS = [
 		new Letter('X', 1, 8),
 		new Letter('Y', 2, 4),
 		new Letter('Y', 2, 4),
-		new Letter('Z', 1, 10),*/
+		new Letter('Z', 1, 10),
 ];
 
 var YOUR_HAND = new Array();
@@ -169,23 +169,39 @@ function findWordToUse(){
  //TODO Your job starts here.
 	//alert("Your code needs to go here");	
 	console.log(YOUR_HAND)
-	var letters = []
+	var letters = ''
 	result = []
 	results = []
 	results2 = []
+	var letterss = []
 	YOUR_HAND.forEach(function(letter){
 		letters+=letter.letter.toLowerCase()
 	})
-	//console.log(letters)
-	quanzuhe2(letters)
-
-	results.forEach(function(m, i) {
-		quanpailie(m, i)
-	})
 	
-	result.forEach(function(r) {
-		results2 = results2.concat(r)
-	})
+	if(letters.indexOf('_')!=-1){
+		{
+			for(var j = 0;j<26;j++){
+				var temp = letters
+				temp = temp.replace('_',String.fromCharCode((97 + j)))
+				letterss.push(temp)
+			}
+		}
+	}else{
+		letterss.push(letters)
+	}
+	console.log(letterss)
+	for(var i = 0;i<letterss.length;i++){
+		quanzuhe2(letterss[i])
+
+		results.forEach(function(m, i) {
+			quanpailie(m, i)
+		})
+		
+		result.forEach(function(r) {
+			results2 = results2.concat(r)
+		})
+	}
+
 	console.log(results2)
 	console.log(results2.length)
 	var maxscore = 0
