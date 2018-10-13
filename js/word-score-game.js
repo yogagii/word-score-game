@@ -150,7 +150,41 @@ function getAvailableLetter(){
 
 function findWordToUse(){
  //TODO Your job starts here.
-	alert("Your code needs to go here");	
+	//alert("Your code needs to go here");	
+	console.log(YOUR_HAND)
+	var letters = []
+	YOUR_HAND.forEach(function(letter){
+		letters+=letter.letter.toLowerCase()
+	})
+	console.log(letters)
+	quanzuhe2(letters)
+
+	results.forEach(function(m, i) {
+		quanpailie(m, i)
+	})
+	
+	result.forEach(function(r) {
+		results2 = results2.concat(r)
+	})
+	console.log(results2)
+	console.log(results2.length)
+	var maxscore = 0
+	var maxword = ''
+	results2.forEach(function(n){
+		if(isThisAWord(n)){
+			//console.log(n)
+			var tempscore = caculateScore(n)
+			if(maxscore<tempscore){
+				maxscore = tempscore
+				maxword = n
+			}
+		}
+	})
+	console.log(maxscore)
+	console.log(maxword)
+	haveLettersForWord(maxword)
+	successfullyAddedWord(maxword)
+	
 }
 function humanFindWordToUse(){
 	
@@ -197,7 +231,19 @@ function takeOutUsedLetters(){
 			console.log(YOUR_HAND[ii].letter + "<- Not Used");
 		}
 	}
-	
+}
+
+function caculateScore(word){
+	var s = 0
+	for(i=0;i<word.length;i++){
+		for(ii=0; ii<YOUR_HAND.length; ii++){
+			if(YOUR_HAND[ii].letter.toLowerCase() == word.charAt(i)){
+				s+=YOUR_HAND[ii].pointsWhenLettersUsed
+				break
+			}
+		}
+	}
+	return s
 }
 
 function haveLettersForWord(aProposedWord){
@@ -275,3 +321,58 @@ $(document).ready(function() {
 		}
 	});
 });
+
+var result = []
+var results = []
+var results2 = []
+
+function insertLetter(ss, w) {
+	var r = new Array();
+	r.push(w.concat(ss));
+	for(var i = 1; i < ss.length; i++) {
+		r.push(((ss.slice(0, i)).concat(w)).concat(ss.slice(i)))
+	}
+	r.push(ss.concat(w))
+	return r;
+}
+
+function quanpailie(s, k) {
+	result[k] = []
+	result[k][0] = s[0];
+	for(var i = 1; i < s.length; i++) {
+		var temparr = new Array()
+		result[k].forEach(function(n) {
+			temparr = temparr.concat(insertLetter(n, s[i]))
+		})
+		for(var j = 0; j < temparr.length; j++) {
+			result[k][j] = temparr[j]
+		}
+	}
+}
+
+function quanzuhe2(s) {
+	var arr2 = s.split('')
+	var rtemp = []
+	for(var xx = 1; xx <= arr2.length; xx++) {
+		loop(arr2, 0, xx, xx)
+	}
+}
+
+function loop(arr, start, n, x) {
+	if(n) {
+		for(var i = start; i <= arr.length - n; i++) {
+			if(n == x) {
+				rtemp = []
+			}
+			rtemp.push(i)
+			loop(arr, ++start, n - 1, x)
+			rtemp.pop()
+		}
+	} else {
+		var stemp = ''
+		rtemp.forEach(function(r) {
+			stemp += arr[r]
+		})
+		results.push(stemp)
+	}
+}
