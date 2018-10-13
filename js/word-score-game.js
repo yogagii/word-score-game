@@ -164,66 +164,81 @@ function getAvailableLetter(){
 function findWordToUse(){
  //TODO Your job starts here.
 	//alert("Your code needs to go here");	
-	console.log(YOUR_HAND)
-	var letters = ''
-	result = []
-	results = []
-	results2 = []
-	var letterss = []
-	YOUR_HAND.forEach(function(letter){
-		letters+=letter.letter.toLowerCase()
-	})
-	if(letters.indexOf('_')!=-1){
-		for(var j = 0;j<26;j++){
-			var temp = letters
-			temp = temp.replace('_',String.fromCharCode((97 + j)))
-			if(temp.indexOf('_')!=-1){
-				for(var jj = 0;jj<26;jj++){
-					var tempp = temp
-					tempp = tempp.replace('_',String.fromCharCode((97 + j)))
-					letterss.push(tempp)
-				}
-			}else{
-				letterss.push(temp)
-			}
-		}
-	}else{
-		letterss.push(letters)
-	}
-	console.log(letterss)
-	for(var i = 0;i<letterss.length;i++){
-		quanzuhe2(letterss[i])
-	}
-	results.forEach(function(m, i) {
-		quanpailie(m, i)
-	})
+	var divb =  document.getElementById('buttonarea')
+	var p = document.createElement('p')
+	p.setAttribute('style','display: inline-block;margin:0px;color:red;')
+	p.innerHTML = 'Loading...Please,wait.'
+	divb.appendChild(p)
 	
-	result.forEach(function(r) {
-		results2 = results2.concat(r)
-	})
-
-	console.log(results2)
-	console.log(results2.length)
-	var maxscore = 0
-	var maxword = ''
-	results2.forEach(function(n){
-		if(isThisAWord(n)){
-			//console.log(n)
-			var tempscore = caculateScore(n)
-			if(maxscore<tempscore){
-				maxscore = tempscore
-				maxword = n
+	setTimeout(()=> {
+		console.log(YOUR_HAND)
+		var letters = ''
+		result = []
+		results = []
+		results2 = []
+		var letterss = []
+		YOUR_HAND.forEach(function(letter){
+			letters+=letter.letter.toLowerCase()
+		})
+		if(letters.indexOf('_')!=-1){
+			for(var j = 0;j<26;j++){
+				var temp = letters
+				temp = temp.replace('_',String.fromCharCode((97 + j)))
+				if(temp.indexOf('_')!=-1){
+					for(var jj = 0;jj<26;jj++){
+						var tempp = temp
+						tempp = tempp.replace('_',String.fromCharCode((97 + j)))
+						letterss.push(tempp)
+					}
+				}else{
+					letterss.push(temp)
+				}
 			}
+		}else{
+			letterss.push(letters)
 		}
-	})
-	if(maxscore==0){
-		alert("You don't have any words to make, please click 'Retire the hand'")
-	}else{
-		console.log(maxscore)
-		console.log(maxword)
-		var maxword2 = haveLettersForWord2(maxword)
-		successfullyAddedWord(maxword)
-	}
+		console.log(letterss)
+		for(var i = 0;i<letterss.length;i++){
+			quanzuhe2(letterss[i])
+		}
+		results.forEach(function(m, i) {
+			quanpailie(m, i)
+		})
+		
+		result.forEach(function(r) {
+			results2 = results2.concat(r)
+		})
+	
+		console.log(results2)
+		console.log(results2.length)
+		var maxscore = 0
+		var maxword = ''
+		results2.forEach(function(n){
+			if(isThisAWord(n)){
+				//console.log(n)
+				var tempscore = caculateScore(n)
+				if(maxscore<tempscore){
+					maxscore = tempscore
+					maxword = n
+				}
+			}
+		})
+		if(maxscore==0){
+			alert("You don't have any words to make, please click 'Retire the hand'")
+			var divb = document.getElementById('buttonarea');
+			for (var i = divb.children.length - 1; i >= 0 ; i--) {
+				if (divb.children[i].nodeName == 'P') {
+					divb.removeChild(divb.children[i]);
+				}
+			}
+		}else{
+			console.log(maxscore)
+			console.log(maxword)
+			var maxword2 = haveLettersForWord2(maxword)
+			successfullyAddedWord(maxword)
+		}
+	}, 10);
+	
 }
 function humanFindWordToUse(){
 	
@@ -249,6 +264,12 @@ function successfullyAddedWord(foundWord){
 	addNumbersFromBag();
 	displayHand();
 	$( "#human-word-input").val('');
+	var divb = document.getElementById('buttonarea');
+	for (var i = divb.children.length - 1; i >= 0 ; i--) {
+		if (divb.children[i].nodeName == 'P') {
+			divb.removeChild(divb.children[i]);
+		}
+	}
 	
 }
 
