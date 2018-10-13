@@ -1,6 +1,6 @@
 var BAG_OF_LETTERS = [
-		new Letter('_', 2, 0),
-		new Letter('_', 2, 0),
+/*		new Letter('_', 2, 0),
+		new Letter('_', 2, 0),*/
 		new Letter('A', 9, 1),
 		new Letter('A', 9, 1),
 		new Letter('A', 9, 1),
@@ -18,7 +18,7 @@ var BAG_OF_LETTERS = [
 		new Letter('D', 4, 2),
 		new Letter('D', 4, 2),
 		new Letter('D', 4, 2),
-		new Letter('E', 12, 1),
+/*		new Letter('E', 12, 1),
 		new Letter('E', 12, 1),
 		new Letter('E', 12, 1),
 		new Letter('E', 12, 1),
@@ -98,7 +98,7 @@ var BAG_OF_LETTERS = [
 		new Letter('X', 1, 8),
 		new Letter('Y', 2, 4),
 		new Letter('Y', 2, 4),
-		new Letter('Z', 1, 10),
+		new Letter('Z', 1, 10),*/
 ];
 
 var YOUR_HAND = new Array();
@@ -114,37 +114,54 @@ function startGame() {
 function addNumbersFromBag(){
 	console.log("your hand has:" + YOUR_HAND.length);
 	for(i=YOUR_HAND.length; i < 7; i++){
-		YOUR_HAND[i] = getAvailableLetter();
+		var availableLetter = getAvailableLetter()
+		if(availableLetter){
+			YOUR_HAND[i] = availableLetter;
+		}
 	}
-	
 }
 
 
 function displayHand(){
 	console.log("your hand has:" + YOUR_HAND.length);
-	for (i = 0; i < YOUR_HAND.length; i++) {
+	if(YOUR_HAND.length>0){
+		for (i = 0; i < YOUR_HAND.length; i++) {
+			console.log("#letter-" + (i+1) +" set to " + YOUR_HAND[i].letter);
+			$( "#letter-" + (i+1)).addClass("letter-" + YOUR_HAND[i].letter);
+			$( "#points-" + (i+1)).addClass("points-" + YOUR_HAND[i].pointsWhenLettersUsed);
+			$( "#letter-" + (i+1)).html(YOUR_HAND[i].letter);
+			$( "#points-" + (i+1)).html(YOUR_HAND[i].pointsWhenLettersUsed);
+		}
+		for(ii=YOUR_HAND.length; ii < 7; ii++){
+			var elem = $(".tile-piece")[ii]
+			while(elem.hasChildNodes()) //当elem下还存在子节点时 循环继续
+		    {
+		        elem.removeChild(elem.firstChild);
+		    }
 
-		console.log("#letter-" + (i+1) +" set to " + YOUR_HAND[i].letter);
-		$( "#letter-" + (i+1)).addClass("letter-" + YOUR_HAND[i].letter);
-		$( "#points-" + (i+1)).addClass("points-" + YOUR_HAND[i].pointsWhenLettersUsed);
-		
-		
-		
-		
-		$( "#letter-" + (i+1)).html(YOUR_HAND[i].letter);
-		
-		$( "#points-" + (i+1)).html(YOUR_HAND[i].pointsWhenLettersUsed);
+			//$("tile-piece").removeClass("letter-" + YOUR_HAND[ii].letter);
+			//$("#points-" + (ii+1)).removeClass("points-" + YOUR_HAND[ii].pointsWhenLettersUsed);
+		}
+	}else{
+		alert('Game Over! Your score: '+SCORE)
 	}
-	
 }
 
 
 
 function getAvailableLetter(){
-	var randomIndex = Math.floor(Math.random() * BAG_OF_LETTERS.length);
-	var randomLetter = BAG_OF_LETTERS.splice(randomIndex, 1);
-	console.log(randomLetter[0]);
-	return randomLetter[0];
+	if(BAG_OF_LETTERS.length>0){
+		var randomIndex = Math.floor(Math.random() * BAG_OF_LETTERS.length);
+		var randomLetter = BAG_OF_LETTERS.splice(randomIndex, 1);
+		console.log(randomLetter[0]);
+		return randomLetter[0];
+	}else{
+		console.log('没')
+		//YOUR_HAND.pop();
+		console.log(YOUR_HAND.length)
+		return null
+	}
+	
 }
 
 
@@ -153,10 +170,13 @@ function findWordToUse(){
 	//alert("Your code needs to go here");	
 	console.log(YOUR_HAND)
 	var letters = []
+	result = []
+	results = []
+	results2 = []
 	YOUR_HAND.forEach(function(letter){
 		letters+=letter.letter.toLowerCase()
 	})
-	console.log(letters)
+	//console.log(letters)
 	quanzuhe2(letters)
 
 	results.forEach(function(m, i) {
@@ -180,11 +200,14 @@ function findWordToUse(){
 			}
 		}
 	})
-	console.log(maxscore)
-	console.log(maxword)
-	haveLettersForWord(maxword)
-	successfullyAddedWord(maxword)
-	
+	if(maxscore==0){
+		alert("You don't have any words to make, please click 'Retire the hand'")
+	}else{
+		console.log(maxscore)
+		console.log(maxword)
+		haveLettersForWord(maxword)
+		successfullyAddedWord(maxword)
+	}
 }
 function humanFindWordToUse(){
 	
