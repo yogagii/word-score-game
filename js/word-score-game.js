@@ -138,9 +138,6 @@ function displayHand(){
 		    {
 		        elem.removeChild(elem.firstChild);
 		    }
-
-			//$("tile-piece").removeClass("letter-" + YOUR_HAND[ii].letter);
-			//$("#points-" + (ii+1)).removeClass("points-" + YOUR_HAND[ii].pointsWhenLettersUsed);
 		}
 	}else{
 		alert('Game Over! Your score: '+SCORE)
@@ -157,7 +154,6 @@ function getAvailableLetter(){
 		return randomLetter[0];
 	}else{
 		console.log('没')
-		//YOUR_HAND.pop();
 		console.log(YOUR_HAND.length)
 		return null
 	}
@@ -177,12 +173,17 @@ function findWordToUse(){
 	YOUR_HAND.forEach(function(letter){
 		letters+=letter.letter.toLowerCase()
 	})
-	
 	if(letters.indexOf('_')!=-1){
-		{
-			for(var j = 0;j<26;j++){
-				var temp = letters
-				temp = temp.replace('_',String.fromCharCode((97 + j)))
+		for(var j = 0;j<26;j++){
+			var temp = letters
+			temp = temp.replace('_',String.fromCharCode((97 + j)))
+			if(temp.indexOf('_')!=-1){
+				for(var jj = 0;jj<26;jj++){
+					var tempp = temp
+					tempp = tempp.replace('_',String.fromCharCode((97 + j)))
+					letterss.push(tempp)
+				}
+			}else{
 				letterss.push(temp)
 			}
 		}
@@ -192,15 +193,14 @@ function findWordToUse(){
 	console.log(letterss)
 	for(var i = 0;i<letterss.length;i++){
 		quanzuhe2(letterss[i])
-
-		results.forEach(function(m, i) {
-			quanpailie(m, i)
-		})
-		
-		result.forEach(function(r) {
-			results2 = results2.concat(r)
-		})
 	}
+	results.forEach(function(m, i) {
+		quanpailie(m, i)
+	})
+	
+	result.forEach(function(r) {
+		results2 = results2.concat(r)
+	})
 
 	console.log(results2)
 	console.log(results2.length)
@@ -221,7 +221,7 @@ function findWordToUse(){
 	}else{
 		console.log(maxscore)
 		console.log(maxword)
-		haveLettersForWord(maxword)
+		var maxword2 = haveLettersForWord2(maxword)
 		successfullyAddedWord(maxword)
 	}
 }
@@ -298,21 +298,47 @@ function haveLettersForWord(aProposedWord){
 					console.log("     " + YOUR_HAND[ii].letter + "<-Found");
 					YOUR_HAND[ii].used = true;
 					foundLetter = true;
-					
 				}
 			}
 		}
-		
-		
 		if(!foundLetter){
 			resetHand();
 			return false;
 		}
 	}
-	
 	return true;
 }
-
+function haveLettersForWord2(aProposedWord){
+	//You could code the _ logic could go in this function
+	var wordAsArray = aProposedWord.toUpperCase().split("");
+	for (i = 0; i < wordAsArray.length; i++) {
+		var foundLetter = false;
+		console.log(wordAsArray[i] + "<-For match");
+		for(ii=0; ii<YOUR_HAND.length; ii++){
+			console.log("              " + YOUR_HAND[ii].letter + "<-Checking");
+			if(YOUR_HAND[ii].letter == wordAsArray [i]){
+				if(!YOUR_HAND[ii].used && !foundLetter){
+					console.log("     " + YOUR_HAND[ii].letter + "<-Found");
+					YOUR_HAND[ii].used = true;
+					foundLetter = true;
+				}
+			}
+		}
+		if(!foundLetter){
+			aProposedWord = aProposedWord.replace(wordAsArray[i],'_')
+			for(ii=0; ii<YOUR_HAND.length; ii++){
+				if(YOUR_HAND[ii].letter == '_'){
+					if(!YOUR_HAND[ii].used && !foundLetter){
+						YOUR_HAND[ii].used = true;
+						foundLetter = true;
+					}
+				}
+			}
+			return aProposedWord;
+		}
+	}
+	return aProposedWord;
+}
 
 function resetHand(){
 	
