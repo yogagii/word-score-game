@@ -164,37 +164,48 @@ function getAvailableLetter(){
 function findWordToUse(){
  //TODO Your job starts here.
 	//alert("Your code needs to go here");	
+	console.log(YOUR_HAND)
+	var letters = ''
+	YOUR_HAND.forEach(function(letter){
+		letters+=letter.letter.toLowerCase()
+	})
+	
 	var divb =  document.getElementById('buttonarea')
 	var p = document.createElement('p')
 	p.setAttribute('style','display: inline-block;margin:0px;color:red;')
-	p.innerHTML = 'Loading...Please,wait.'
+	if(letters.indexOf('_')==-1){
+		p.innerHTML = 'Loading...Please wait.'
+	}else if(letters.indexOf('_')!=-1&&letters.indexOf('_')==letters.lastIndexOf('_')){
+		p.innerHTML = 'Loading...Please wait about 10 seconds.'
+	}else{
+		p.innerHTML = 'Loading...Please wait about 35 seconds.'
+	}
+	
 	divb.appendChild(p)
 	
 	setTimeout(()=> {
-		console.log(YOUR_HAND)
-		var letters = ''
 		result = []
 		results = []
 		results2 = []
+		results3 = []
 		var letterss = []
-		YOUR_HAND.forEach(function(letter){
-			letters+=letter.letter.toLowerCase()
-		})
-		if(letters.indexOf('_')!=-1){
+		//有且只有一个_时
+		if(letters.indexOf('_')!=-1&&letters.indexOf('_')==letters.lastIndexOf('_')){
 			for(var j = 0;j<26;j++){
 				var temp = letters
 				temp = temp.replace('_',String.fromCharCode((97 + j)))
-				if(temp.indexOf('_')!=-1){
+				/*if(temp.indexOf('_')!=-1){
 					for(var jj = 0;jj<26;jj++){
 						var tempp = temp
 						tempp = tempp.replace('_',String.fromCharCode((97 + j)))
 						letterss.push(tempp)
 					}
-				}else{
+				}else{*/
 					letterss.push(temp)
-				}
+				/*}*/
 			}
 		}else{
+			//没有_或两个_时
 			letterss.push(letters)
 		}
 		console.log(letterss)
@@ -214,14 +225,30 @@ function findWordToUse(){
 		var maxscore = 0
 		var maxword = ''
 		results2.forEach(function(n){
-			if(isThisAWord(n)){
+			if(n.indexOf('_')==-1){
+				if(isThisAWord(n)){
 				//console.log(n)
-				var tempscore = caculateScore(n)
-				if(maxscore<tempscore){
-					maxscore = tempscore
-					maxword = n
+					var tempscore = caculateScore(n)
+					if(maxscore<tempscore){
+						maxscore = tempscore
+						maxword = n
+					}
+				}
+			}else{
+				//有两个_时
+				result3 = isThisAWord2(n)
+				if(result3.length>0){
+					//console.log(result3)
+					results3.forEach(function(k){
+						var tempscore = caculateScore(k)
+						if(maxscore<tempscore){
+							maxscore = tempscore
+							maxword = k
+						}
+					})
 				}
 			}
+			
 		})
 		if(maxscore==0){
 			alert("You don't have any words to make, please click 'Retire the hand'")
@@ -374,6 +401,9 @@ function isThisAWord(aProposedWord){
 	  }
 	  return false;
 }
+function isThisAWord2(aProposedWord){
+	  return Word_List.isInList2(aProposedWord);
+}
 
 function retireHand(){
 	//Loose all the points in your hand
@@ -411,6 +441,7 @@ $(document).ready(function() {
 var result = []
 var results = []
 var results2 = []
+var results3 = []
 
 function insertLetter(ss, w) {
 	var r = new Array();
